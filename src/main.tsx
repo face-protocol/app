@@ -16,7 +16,7 @@ import { chains, config } from "./wagmi";
  */
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <WagmiConfig config={config}>
         <RainbowKitProvider chains={chains}>
           <App />
