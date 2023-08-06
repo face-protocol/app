@@ -12,16 +12,15 @@ contract CommunityScript is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         address mainAddress = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
-        address[] memory proposers = new address[](1);
-        proposers[0] = mainAddress;
+        address[] memory proposersAndExecutor;
+        proposersAndExecutor[0] = mainAddress;
 
-        address[] memory executors = new address[](1);
-        executors[0] = mainAddress;
+        address[] memory initialOwners;
+        initialOwners[0] = mainAddress;
 
-        SBT sbt = new SBT();
-        TimelockController timelockController = new TimelockController(0 days, proposers, executors);
+        TimelockController timelockController = new TimelockController(0 days, proposersAndExecutor, proposersAndExecutor);
 
-        Community community = new Community(sbt, timelockController);
+        Community community = new Community(timelockController, initialOwners);
 
         vm.stopBroadcast();
     }

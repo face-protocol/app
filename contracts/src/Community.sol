@@ -6,14 +6,23 @@ import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
+import "./SBT.sol";
 
 contract Community is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorTimelockControl {
-  constructor(IVotes _token, TimelockController _timelock)
+  SBT public sbt;
+
+  constructor(TimelockController _timelock, address[] memory _initialOwners)
     Governor("Community")
     GovernorSettings(7200 /* 1 day */, 21600 /* 3 day */, 0)
-    GovernorVotes(_token)
+    GovernorVotes(IVotes(address(sbt)))
     GovernorTimelockControl(_timelock)
-  {}
+  {
+    sbt = new SBT();
+
+    for (uint i = 0; i < _initialOwners.length; i++) {
+      sbt.safeMint(_initialOwners[i], i);
+    }
+  }
 
   function quorum(uint256 blockNumber) public pure override returns (uint256) {
     return 0e18;
