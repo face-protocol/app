@@ -5,17 +5,15 @@ import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 import "./SBT.sol";
 
-contract Community is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorTimelockControl {
+contract Community is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes {
   SBT public sbt;
 
-  constructor(TimelockController _timelock, address[] memory _initialOwners)
+  constructor(address[] memory _initialOwners)
     Governor("Community")
     GovernorSettings(7200 /* 1 day */, 21600 /* 3 day */, 0)
     GovernorVotes(IVotes(address(sbt)))
-    GovernorTimelockControl(_timelock)
   {
     sbt = new SBT();
 
@@ -49,7 +47,7 @@ contract Community is Governor, GovernorSettings, GovernorCountingSimple, Govern
   function state(uint256 proposalId)
     public
     view
-    override(Governor, GovernorTimelockControl)
+    override(Governor)
     returns (ProposalState)
   {
     return super.state(proposalId);
@@ -57,7 +55,7 @@ contract Community is Governor, GovernorSettings, GovernorCountingSimple, Govern
 
   function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description)
     public
-    override(Governor, IGovernor)
+    override(Governor)
     returns (uint256)
   {
     return super.propose(targets, values, calldatas, description);
@@ -74,14 +72,14 @@ contract Community is Governor, GovernorSettings, GovernorCountingSimple, Govern
 
   function _execute(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
     internal
-    override(Governor, GovernorTimelockControl)
+    override(Governor)
   {
     super._execute(proposalId, targets, values, calldatas, descriptionHash);
   }
 
   function _cancel(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
     internal
-    override(Governor, GovernorTimelockControl)
+    override(Governor)
     returns (uint256)
   {
     return super._cancel(targets, values, calldatas, descriptionHash);
@@ -90,7 +88,7 @@ contract Community is Governor, GovernorSettings, GovernorCountingSimple, Govern
   function _executor()
     internal
     view
-    override(Governor, GovernorTimelockControl)
+    override(Governor)
     returns (address)
   {
     return super._executor();
@@ -99,7 +97,7 @@ contract Community is Governor, GovernorSettings, GovernorCountingSimple, Govern
   function supportsInterface(bytes4 interfaceId)
     public
     view
-    override(Governor, GovernorTimelockControl)
+    override(Governor)
     returns (bool)
   {
     return super.supportsInterface(interfaceId);
