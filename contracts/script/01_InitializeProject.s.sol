@@ -3,7 +3,6 @@ pragma solidity ^0.8.9;
 
 import "forge-std/Script.sol";
 import "../src/Community.sol";
-import "../src/SBT.sol";
 
 contract InitializeProjectScript is Script {
     function run() external {
