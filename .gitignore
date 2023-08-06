@@ -6,6 +6,8 @@
 /.pnp
 .pnp.js
 
+/broadcast
+
 # testing
 
 /coverage
@@ -17,6 +19,7 @@ dist-ssr
 
 # production
 
+/.vscode
 /build
 
 # misc
