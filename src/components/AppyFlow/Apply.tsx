@@ -11,7 +11,7 @@ function Apply() {
         {requestToApply.map((item) => (
           <div key={item} className="flex justify-between">
             <p>{item}</p>
-            <div className="text-attention font-medium">
+            <div className="font-medium text-attention">
               <button>connect</button>
             </div>
           </div>
