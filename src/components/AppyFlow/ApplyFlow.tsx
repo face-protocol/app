@@ -4,6 +4,7 @@ import { useApplicationState } from "../../store";
 import { Button } from "../../ui";
 import { Apply } from "./Apply";
 import { STEPS } from "./config";
+import { Deposit } from "./Deposit";
 import { TFlowProps } from "./types";
 
 function Steps({
@@ -14,9 +15,34 @@ function Steps({
   props: TFlowProps;
 }) {
   switch (currentStep) {
-    case STEPS.Apply:
-    default: {
+    case STEPS.Deposit: {
+      return <Deposit {...props} />;
+    }
+    case STEPS.Apply: {
       return <Apply {...props} />;
+    }
+    default: {
+      return null;
+    }
+  }
+}
+
+function NextStepButton({
+  currentStep,
+  onClick,
+}: {
+  currentStep: number;
+  onClick: VoidFunction;
+}) {
+  switch (currentStep) {
+    case STEPS.Apply: {
+      return <Button onClick={onClick}>Continue</Button>;
+    }
+    case STEPS.Deposit: {
+      return <Button onClick={onClick}>Send application</Button>;
+    }
+    default: {
+      return null;
     }
   }
 }
@@ -42,7 +68,9 @@ function ApplyFlow() {
       </div>
 
       <div>
-        {isCanContinue && <Button onClick={onClickContinue}>Continue</Button>}
+        {isCanContinue && (
+          <NextStepButton currentStep={currentStep} onClick={onClickContinue} />
+        )}
       </div>
     </section>
   );
