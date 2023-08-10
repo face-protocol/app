@@ -34,7 +34,12 @@ function Profile(props: TProfileProps) {
           </div>
           <div className="flex items-center gap-3">
             <div>
-              <img src={community.src} width={16} height={16} />
+              <img
+                src={community.src}
+                className="rounded-[4px]"
+                width={16}
+                height={16}
+              />
             </div>
             <div className="text-[12px] text-[#F5F5F5]">
               {type === "friend" ? "Your friend from" : "Also member of"}{" "}

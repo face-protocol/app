@@ -3,6 +3,8 @@ import { Heading, Profile } from "../../ui";
 import { ActionButton } from "../../ui/ActionButton";
 import { TFlowProps } from "./types";
 
+import linkedInSrc from "./assets/linkedin.png";
+
 function RequestToJoin(props: TFlowProps) {
   const profiles = USERS_MOCK;
   return (
@@ -23,7 +25,7 @@ function RequestToJoin(props: TFlowProps) {
       </div>
       <div className="mt-auto">
         <div>List of some of your friends in the community</div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 pt-6">
           {profiles.map((profile) => (
             <Profile
               profile={profile}
@@ -31,7 +33,7 @@ function RequestToJoin(props: TFlowProps) {
               action={<ActionButton>open</ActionButton>}
               community={{
                 title: "LinkedIn",
-                src: "blob:https://www.figma.com/9e14c32a-fb80-4072-90ee-dacc18b19349",
+                src: linkedInSrc,
               }}
             />
           ))}
