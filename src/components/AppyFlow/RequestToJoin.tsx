@@ -1,7 +1,10 @@
-import { Heading } from "../../ui";
+import { USERS_MOCK } from "../../mocks";
+import { Heading, Profile } from "../../ui";
+import { ActionButton } from "../../ui/ActionButton";
 import { TFlowProps } from "./types";
 
 function RequestToJoin(props: TFlowProps) {
+  const profiles = USERS_MOCK;
   return (
     <>
       <Heading.H1>
@@ -11,18 +14,28 @@ function RequestToJoin(props: TFlowProps) {
         You require approval from friends who collectively have a reputation of
         0.03 ETH
       </div>
-      <div>0 / 0.03 ETH</div>
-      <div className="flex items-center justify-between">
+      <div className="font-semibold text-attention">0 / 0.03 ETH</div>
+      <div className="mt-10 flex items-center justify-between">
         <div>Copy the application link</div>
         <div>
-          <button className="font-medium text-attention hover:opacity-80">
-            copy
-          </button>
+          <ActionButton>copy</ActionButton>
         </div>
       </div>
       <div className="mt-auto">
         <div>List of some of your friends in the community</div>
-        <div></div>
+        <div>
+          {profiles.map((profile) => (
+            <Profile
+              profile={profile}
+              type="friend"
+              action={<ActionButton>open</ActionButton>}
+              community={{
+                title: "LinkedIn",
+                src: "blob:https://www.figma.com/9e14c32a-fb80-4072-90ee-dacc18b19349",
+              }}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

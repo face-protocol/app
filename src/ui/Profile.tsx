@@ -13,7 +13,7 @@ type TProfileProps = {
 };
 
 function Profile(props: TProfileProps) {
-  const { profile, action } = props;
+  const { profile, action, community, type } = props;
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -26,13 +26,21 @@ function Profile(props: TProfileProps) {
           />
         </div>
         <div className="flex flex-col">
-          <div>
+          <div className="flex gap-3">
             <div className="text-white">{profile.name}</div>
             <div className="text-gray-600">
               Reputation {profile.reputation} ETH
             </div>
           </div>
-          <div></div>
+          <div>
+            <div>
+              <img src={community.src} width={16} height={16} />
+            </div>
+            <div>
+              {type === "friend" ? "Your friend from" : "Also member of"}{" "}
+              {community.title}
+            </div>
+          </div>
         </div>
       </div>
       <div>{action}</div>
