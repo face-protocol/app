@@ -3,7 +3,11 @@ module.exports = {
   content: ["**/*.{ts,tsx,html}"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        accent: "#34D399",
+      },
+    },
   },
   plugins: [],
 };

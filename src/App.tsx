@@ -2,7 +2,7 @@ import { ApplyToCommunityPage } from "./pages";
 
 export function App() {
   return (
-    <main className="w-full h-full">
+    <main className="h-full w-full max-w-[480px]">
       <ApplyToCommunityPage />
     </main>
   );
