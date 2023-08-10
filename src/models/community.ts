@@ -1,3 +1,8 @@
 type TCommunityVerificationApps = "X" | "WorldID" | "Wallet";
 
-export type { TCommunityVerificationApps };
+type TCommunity = {
+  title: string;
+  requestToApply: TCommunityVerificationApps[];
+};
+
+export type { TCommunity, TCommunityVerificationApps };
