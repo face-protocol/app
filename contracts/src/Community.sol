@@ -1,105 +1,51 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/governance/Governor.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
-import "./SBT.sol";
+pragma solidity 0.8.17;
 
-contract Community is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes {
-  SBT public sbt;
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "./interfaces/ICommunity.sol";
 
-  constructor(address[] memory _initialOwners)
-    Governor("Community")
-    GovernorSettings(7200 /* 1 day */, 21600 /* 3 day */, 0)
-    GovernorVotes(IVotes(address(sbt)))
-  {
-    sbt = new SBT();
+contract Community is ERC721Upgradeable, ICommunity {
+    // STORAGE
 
-    for (uint i = 0; i < _initialOwners.length; i++) {
-      sbt.safeMint(_initialOwners[i], i);
+    string public rulesURI;
+
+    uint256 public membershipDeposit;
+
+    uint256 public membershipVotesThreshold;
+
+    mapping(address => Application) public applications;
+
+    // CONSTRUCTOR AND INITIALIZER
+
+    constructor() {
+        _disableInitializers();
     }
-  }
 
-  function quorum(uint256 blockNumber) public pure override returns (uint256) {
-    return 0e18;
-  }
+    function initialize(
+        CommunityInfo calldata info
+    ) external payable initializer {
+        __ERC721_init(info.name, info.symbol);
+        rulesURI = info.rulesURI;
+        membershipDeposit = info.membershipDeposit;
+        membershipVotesThreshold = info.membershipVotesThreshold;
+    }
 
-  function votingDelay()
-    public
-    view
-    override(IGovernor, GovernorSettings)
-    returns (uint256)
-  {
-    return super.votingDelay();
-  }
+    // PUBLIC FUNCTIONS
 
-  function votingPeriod()
-    public
-    view
-    override(IGovernor, GovernorSettings)
-    returns (uint256)
-  {
-    return super.votingPeriod();
-  }
+    /// @notice Function used to apply to community
+    function applyForMembership(string calldata dataURI) external payable {}
 
-  function state(uint256 proposalId)
-    public
-    view
-    override(Governor)
-    returns (ProposalState)
-  {
-    return super.state(proposalId);
-  }
+    /// @notice Function for community members to approve acceptance of new member to community
+    function approve(address applicant) external {}
 
-  function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description)
-    public
-    override(Governor)
-    returns (uint256)
-  {
-    return super.propose(targets, values, calldatas, description);
-  }
+    /// @notice Function to delegate reputation to other member
+    function delegateReputation(address member, uint256 amount) external {}
 
-  function proposalThreshold()
-    public
-    view
-    override(Governor, GovernorSettings)
-    returns (uint256)
-  {
-    return super.proposalThreshold();
-  }
+    /// @notice Function to revoke reputation delegation from member
+    function revokeReputation(address member) external {}
 
-  function _execute(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-    internal
-    override(Governor)
-  {
-    super._execute(proposalId, targets, values, calldatas, descriptionHash);
-  }
+    // PUBLIC VIEW FUNCTIONS
 
-  function _cancel(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-    internal
-    override(Governor)
-    returns (uint256)
-  {
-    return super._cancel(targets, values, calldatas, descriptionHash);
-  }
-
-  function _executor()
-    internal
-    view
-    override(Governor)
-    returns (address)
-  {
-    return super._executor();
-  }
-
-  function supportsInterface(bytes4 interfaceId)
-    public
-    view
-    override(Governor)
-    returns (bool)
-  {
-    return super.supportsInterface(interfaceId);
-  }
+    function reputationOf(address member) external view returns (uint256) {}
 }
