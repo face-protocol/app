@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { COMMUNITY_MOCK } from "../../mocks";
+import { COMMUNITY_MOCK } from "../../mocks/mocks";
 import { useApplicationState } from "../../store";
 import { Button } from "../../ui";
 import { Apply } from "./Apply";

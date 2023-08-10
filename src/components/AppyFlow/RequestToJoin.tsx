@@ -1,4 +1,4 @@
-import { USERS_MOCK } from "../../mocks";
+import { USERS_MOCK } from "../../mocks/mocks";
 import { Heading, Profile } from "../../ui";
 import { ActionButton } from "../../ui/ActionButton";
 import { TFlowProps } from "./types";
@@ -23,7 +23,7 @@ function RequestToJoin(props: TFlowProps) {
       </div>
       <div className="mt-auto">
         <div>List of some of your friends in the community</div>
-        <div>
+        <div className="flex flex-col gap-3">
           {profiles.map((profile) => (
             <Profile
               profile={profile}

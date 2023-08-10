@@ -1,5 +1,8 @@
-import { TCommunity } from "./models";
-import { TProfile } from "./models/profile";
+import { TCommunity } from "../models";
+import { TProfile } from "../models/profile";
+
+import avatarGuy from "./assets/avatar_guy.png";
+import avatarAvichal from "./assets/avatar_avichal.png";
 
 const COMMUNITY_MOCK: TCommunity = {
   title: "Stanford",
@@ -8,15 +11,13 @@ const COMMUNITY_MOCK: TCommunity = {
 };
 
 const USER_MOCK_1: TProfile = {
-  avatarSrc:
-    "https://www.figma.com/file/fRMbvf8LOjJl04ouEJb3ZE/Untitled?type=design&node-id=1-4822&mode=dev",
+  avatarSrc: avatarGuy,
   name: "Guy",
   reputation: 0.014,
 };
 
 const USER_MOCK_2: TProfile = {
-  avatarSrc:
-    "https://www.figma.com/file/fRMbvf8LOjJl04ouEJb3ZE/Untitled?type=design&node-id=1-4828&mode=dev",
+  avatarSrc: avatarAvichal,
   name: "Avichal",
   reputation: 1,
 };
