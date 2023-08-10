@@ -32,11 +32,11 @@ function Profile(props: TProfileProps) {
               Reputation {profile.reputation} ETH
             </div>
           </div>
-          <div>
+          <div className="flex items-center gap-3">
             <div>
               <img src={community.src} width={16} height={16} />
             </div>
-            <div>
+            <div className="text-[12px] text-[#F5F5F5]">
               {type === "friend" ? "Your friend from" : "Also member of"}{" "}
               {community.title}
             </div>
