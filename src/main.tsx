@@ -1,12 +1,13 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { WagmiConfig } from "wagmi";
 
 import { App } from "./App";
 import { chains, config } from "./wagmi";
+
+import "./index.css";
 
 /**
  * Root providers and initialization of app
@@ -16,12 +17,10 @@ import { chains, config } from "./wagmi";
  */
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <WagmiConfig config={config}>
-        <RainbowKitProvider chains={chains}>
-          <App />
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </GoogleOAuthProvider>
+    <WagmiConfig config={config}>
+      <RainbowKitProvider chains={chains}>
+        <App />
+      </RainbowKitProvider>
+    </WagmiConfig>
   </React.StrictMode>,
 );

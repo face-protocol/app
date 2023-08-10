@@ -1,13 +1,9 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount } from "wagmi";
-
-import { Attestooooooor } from "./components";
-import { GoogleLogin } from "@react-oauth/google";
+import { ApplyToCommunityPage } from "./pages";
 
 export function App() {
   return (
-    <main>
-      <GoogleLogin onSuccess={() => alert("Success!")} />
+    <main className="m-auto mt-5 h-full w-full max-w-[480px] p-4 md:mt-[160px] md:pt-0">
+      <ApplyToCommunityPage />
     </main>
   );
 }

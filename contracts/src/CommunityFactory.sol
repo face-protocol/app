@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.15;
 
 import "./interfaces/ICommunity.sol";
 import "./interfaces/ICommunityFactory.sol";
