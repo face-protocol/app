@@ -1,3 +1,5 @@
+import { ApplyToCommunityPage } from "./pages";
+
 export function App() {
-  return <main></main>;
+  return <ApplyToCommunityPage />;
 }
