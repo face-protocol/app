@@ -63,7 +63,7 @@ function ApplyFlow() {
 
   return (
     <section className="flex h-full flex-col gap-3">
-      <div className="flex h-full w-full flex-col gap-10 md:max-h-[400px]">
+      <div className="flex h-full w-full flex-col gap-2 md:max-h-[400px]">
         <Steps currentStep={currentStep} props={{ community }} />
       </div>
 

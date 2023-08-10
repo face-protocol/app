@@ -47,7 +47,7 @@ function Apply(props: TFlowProps) {
   return (
     <>
       <Heading.H1>To apply to {title} community, you need:</Heading.H1>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 md:mt-8">
         {requestToApply.map((id) => (
           <div key={id} className="flex justify-between">
             <p className="flex gap-2">
