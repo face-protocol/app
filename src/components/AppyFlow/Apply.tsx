@@ -10,7 +10,10 @@ function Apply() {
       <div className="flex flex-col gap-3">
         {requestToApply.map((item) => (
           <div key={item} className="flex justify-between">
-            <p>{item}</p>
+            <p>
+              <div></div>
+              <div>{item}</div>
+            </p>
             <div className="font-medium text-attention">
               <button>connect</button>
             </div>
