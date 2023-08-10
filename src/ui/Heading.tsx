@@ -1,4 +1,4 @@
-const H1 = ({ children }) => {
+const H1 = ({ children }: React.PropsWithChildren) => {
   return <h1>{children}</h1>;
 };
 

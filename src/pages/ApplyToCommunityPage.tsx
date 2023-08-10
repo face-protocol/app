@@ -1,5 +1,7 @@
+import { ApplyFlow } from "../components";
+
 function ApplyToCommunityPage() {
-  return null;
+  return <ApplyFlow />;
 }
 
 export { ApplyToCommunityPage };
