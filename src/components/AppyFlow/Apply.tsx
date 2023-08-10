@@ -1,8 +1,9 @@
 import { COMMUNITY_MOCK } from "../../mocks";
 import { Heading } from "../../ui";
+import { TFlowProps } from "./types";
 
-function Apply() {
-  const { title, requestToApply } = COMMUNITY_MOCK;
+function Apply(props: TFlowProps) {
+  const { title, requestToApply } = props.community;
 
   return (
     <>
