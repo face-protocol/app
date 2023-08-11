@@ -16,11 +16,11 @@ function Steps({
   props: TFlowProps;
 }) {
   switch (currentStep) {
-    case STEPS.Deposit: {
-      return <Deposit {...props} />;
-    }
     case STEPS.Apply: {
       return <Apply {...props} />;
+    }
+    case STEPS.Deposit: {
+      return <Deposit {...props} />;
     }
     case STEPS.RequestToJoin: {
       return <RequestToJoin {...props} />;

@@ -21,7 +21,7 @@ const router = createBrowserRouter([
 export function App() {
   return (
     <>
-      <header className="flex w-full p-2">
+      <header className="flex w-full items-center justify-center p-2">
         <ConnectButton chainStatus="icon" />
       </header>
       <main className="m-auto mt-3 h-full w-full max-w-[480px] p-4 md:mt-[160px] md:pt-0">

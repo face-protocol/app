@@ -1,3 +1,4 @@
+import { useEnsAddress, useAccount } from "wagmi";
 import { TCommunityVerificationApps } from "../../models";
 import { useApplicationState } from "../../store";
 import { Heading } from "../../ui";
@@ -11,13 +12,18 @@ function Apply(props: TFlowProps) {
     actions: { addApplication },
   } = useApplicationState();
 
+  const { address } = useAccount();
+  const { data: ens } = useEnsAddress({
+    name: address,
+  });
+
   const communityActions: {
     [key in TCommunityVerificationApps]: () => any;
   } = {
     Wallet: () => {
       return {
-        address: "0xefb8011ad92f29f8cd2fb2a7a1842b2c80e0de91",
-        ens: "nrjshka.eth",
+        address,
+        ens,
       };
     },
     WorldID: () => {
@@ -30,6 +36,14 @@ function Apply(props: TFlowProps) {
         account: "Max | nrjshka.eth",
       };
     },
+  };
+
+  const communityState: {
+    [key in TCommunityVerificationApps]: string;
+  } = {
+    Wallet: state.Wallet?.ens || state.Wallet?.address || "connected",
+    WorldID: "verified",
+    X: "connected",
   };
 
   const onConnectClick = (id: TCommunityVerificationApps) => () => {
@@ -56,7 +70,7 @@ function Apply(props: TFlowProps) {
             </p>
             <div className="font-medium text-attention">
               {state[id] ? (
-                "connected"
+                communityState[id]
               ) : (
                 <button
                   onClick={onConnectClick(id)}
