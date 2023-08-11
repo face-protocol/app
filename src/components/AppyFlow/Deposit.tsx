@@ -1,8 +1,15 @@
+import { useAccount, useBalance } from "wagmi";
 import { Heading, Select } from "../../ui";
 import { TFlowProps } from "./types";
 
 function Deposit(props: TFlowProps) {
   const { deposit } = props.community;
+
+  const { address } = useAccount();
+  const { data } = useBalance({
+    address,
+  });
+
   return (
     <>
       <Heading.H1>Final step! Deposit {deposit} ETH</Heading.H1>
@@ -18,7 +25,11 @@ function Deposit(props: TFlowProps) {
             <Select>ETH</Select>
           </div>
         </div>
-        <div>Balance 0.41 ETH</div>
+        {data && (
+          <div>
+            Balance {Number(data.formatted).toFixed(4)} {data.symbol}
+          </div>
+        )}
       </div>
     </>
   );
