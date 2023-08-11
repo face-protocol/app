@@ -1,6 +1,7 @@
 import { ApplyToCommunityPage, CommunityPage } from "./pages";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { LendingPage } from "./pages/LendingPage";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const router = createBrowserRouter([
   {
@@ -19,8 +20,13 @@ const router = createBrowserRouter([
 
 export function App() {
   return (
-    <main className="m-auto mt-5 h-full w-full max-w-[480px] p-4 md:mt-[160px] md:pt-0">
-      <RouterProvider router={router} />
-    </main>
+    <>
+      <header className="flex w-full p-2">
+        <ConnectButton chainStatus="icon" />
+      </header>
+      <main className="m-auto mt-3 h-full w-full max-w-[480px] p-4 md:mt-[160px] md:pt-0">
+        <RouterProvider router={router} />
+      </main>
+    </>
   );
 }
