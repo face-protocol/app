@@ -3,7 +3,7 @@ import { Heading, Profile } from "../../ui";
 import { ActionButton } from "../../ui/ActionButton";
 import { TFlowProps } from "./types";
 
-import linkedInSrc from "./assets/linkedin.png";
+import linkedInSrc from "../assets/linkedin.png";
 
 function RequestToJoin(props: TFlowProps) {
   const profiles = USERS_MOCK;

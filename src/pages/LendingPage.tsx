@@ -1,5 +1,7 @@
+import { Lending } from "../components/Lending";
+
 function LendingPage() {
-  return <div>Lending Page</div>;
+  return <Lending />;
 }
 
 export { LendingPage };
