@@ -1,5 +1,7 @@
+import { Community } from "../components";
+
 function CommunityPage() {
-  return <div>Community Page</div>;
+  return <Community />;
 }
 
 export { CommunityPage };
