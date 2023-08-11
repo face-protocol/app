@@ -1,4 +1,4 @@
-import { useEnsAddress, useAccount } from "wagmi";
+import { useAccount, useEnsName } from "wagmi";
 import { TCommunityVerificationApps } from "../../models";
 import { useApplicationState } from "../../store";
 import { Heading } from "../../ui";
@@ -13,8 +13,9 @@ function Apply(props: TFlowProps) {
   } = useApplicationState();
 
   const { address } = useAccount();
-  const { data: ens } = useEnsAddress({
-    name: address,
+  const { data: ens } = useEnsName({
+    address,
+    chainId: 1,
   });
 
   const communityActions: {

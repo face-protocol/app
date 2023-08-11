@@ -8,6 +8,8 @@ import { Deposit } from "./Deposit";
 import { RequestToJoin } from "./RequestToJoin";
 import { TFlowProps } from "./types";
 
+import { useCommunityApplyForMembership } from "../../generated";
+
 function Steps({
   currentStep,
   props,
@@ -56,10 +58,21 @@ function ApplyFlow() {
 
   const { state } = useApplicationState();
 
+  useCommunityApplyForMembership();
+
   const [currentStep, setCurrentStep] = useState(STEPS.Apply);
 
   const onClickContinue = () => {
-    setCurrentStep((prev) => prev + 1);
+    switch (currentStep) {
+      case STEPS.Deposit: {
+        break;
+      }
+      case STEPS.Apply:
+      default: {
+        setCurrentStep((prev) => prev + 1);
+        break;
+      }
+    }
   };
 
   const isFlowAvailable =
