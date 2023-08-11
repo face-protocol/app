@@ -9,6 +9,8 @@ import { RequestToJoin } from "./RequestToJoin";
 import { TFlowProps } from "./types";
 
 import { useCommunityApplyForMembership } from "../../generated";
+import { HELIA_JSON } from "../../ipfs";
+import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
 
 function Steps({
   currentStep,
@@ -58,13 +60,27 @@ function ApplyFlow() {
 
   const { state } = useApplicationState();
 
-  useCommunityApplyForMembership();
+  const { write } = useCommunityApplyForMembership({
+    chainId: DEFAULT_CHAIN_ID,
+    address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+    value: 0n,
+  });
 
   const [currentStep, setCurrentStep] = useState(STEPS.Apply);
 
-  const onClickContinue = () => {
+  const onClickContinue = async () => {
     switch (currentStep) {
       case STEPS.Deposit: {
+        // const hash = await HELIA_JSON.add({
+        //   test: 123,
+        // });
+        // console.log("hash", hash.toString());
+        // console.log(await HELIA_JSON.get(hash));
+        // debugger;
+        const hash = "12346";
+        await write({
+          args: [hash],
+        });
         break;
       }
       case STEPS.Apply:
