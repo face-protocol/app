@@ -1,4 +1,4 @@
-import { optimismGoerli } from "wagmi/dist/chains";
+import { optimismGoerli } from "wagmi/chains";
 
 const DEFAULT_CHAIN_ID = optimismGoerli.id;
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COMMUNITY_MOCK } from "../../mocks/mocks";
 import { useApplicationState } from "../../store";
 import { Button } from "../../ui";
@@ -11,6 +11,7 @@ import { TFlowProps } from "./types";
 import { useCommunityApplyForMembership } from "../../generated";
 import { HELIA_JSON } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
+import { useWaitForTransaction } from "wagmi";
 
 function Steps({
   currentStep,
@@ -38,10 +39,16 @@ function Steps({
 function NextStepButton({
   currentStep,
   onClick,
+  isLoading,
 }: {
   currentStep: number;
   onClick: VoidFunction;
+  isLoading: boolean;
 }) {
+  if (isLoading) {
+    return <Button disabled>Loading...</Button>;
+  }
+
   switch (currentStep) {
     case STEPS.Apply: {
       return <Button onClick={onClick}>Continue</Button>;
@@ -60,10 +67,17 @@ function ApplyFlow() {
 
   const { state } = useApplicationState();
 
-  const { write } = useCommunityApplyForMembership({
+  const { write, data, isLoading } = useCommunityApplyForMembership({
     chainId: DEFAULT_CHAIN_ID,
     address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
     value: 0n,
+  });
+  useWaitForTransaction({
+    hash: data?.hash,
+    chainId: DEFAULT_CHAIN_ID,
+    onSuccess: () => {
+      setCurrentStep((prev) => prev + 1);
+    },
   });
 
   const [currentStep, setCurrentStep] = useState(STEPS.Apply);
@@ -104,7 +118,11 @@ function ApplyFlow() {
       </div>
 
       {isButtonAvailable && (
-        <NextStepButton currentStep={currentStep} onClick={onClickContinue} />
+        <NextStepButton
+          isLoading={isLoading}
+          currentStep={currentStep}
+          onClick={onClickContinue}
+        />
       )}
     </section>
   );
