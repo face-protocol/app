@@ -11,7 +11,7 @@ import { TFlowProps } from "./types";
 import { useCommunityApplyForMembership } from "../../generated";
 import { HELIA_JSON } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
-import { useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransaction } from "wagmi";
 
 function Steps({
   currentStep,
@@ -67,6 +67,7 @@ function ApplyFlow() {
 
   const { state } = useApplicationState();
 
+  const { address } = useAccount();
   const { write, data, isLoading } = useCommunityApplyForMembership({
     chainId: DEFAULT_CHAIN_ID,
     address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
