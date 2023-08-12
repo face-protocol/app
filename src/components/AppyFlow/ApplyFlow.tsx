@@ -8,10 +8,15 @@ import { Deposit } from "./Deposit";
 import { RequestToJoin } from "./RequestToJoin";
 import { TFlowProps } from "./types";
 
-import { useCommunityApplyForMembership } from "../../generated";
+import {
+  useCommunityApplyForMembership,
+  useCommunityMembershipDeposit,
+} from "../../generated";
 import { HELIA_JSON } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
-import { useAccount, useWaitForTransaction } from "wagmi";
+import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
+import { etherUnits, formatGwei, gweiUnits, parseEther } from "viem";
+import { config } from "../../wagmi";
 
 function Steps({
   currentStep,
@@ -68,11 +73,19 @@ function ApplyFlow() {
   const { state } = useApplicationState();
 
   const { address } = useAccount();
+  const { data: membershipDeposit = 0n, isSuccess: isCommunitySuccess } =
+    useCommunityMembershipDeposit({
+      chainId: DEFAULT_CHAIN_ID,
+      address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+    });
   const { write, data, isLoading } = useCommunityApplyForMembership({
     chainId: DEFAULT_CHAIN_ID,
     address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
-    value: 0n,
+    account: address,
+    functionName: "applyForMembership",
+    value: membershipDeposit,
   });
+
   useWaitForTransaction({
     hash: data?.hash,
     chainId: DEFAULT_CHAIN_ID,
@@ -92,7 +105,7 @@ function ApplyFlow() {
         // console.log("hash", hash.toString());
         // console.log(await HELIA_JSON.get(hash));
         // debugger;
-        const hash = "12346";
+        const hash = "test";
         await write({
           args: [hash],
         });
@@ -115,7 +128,10 @@ function ApplyFlow() {
   return (
     <section className="flex h-full flex-col gap-3">
       <div className="flex h-full w-full flex-col gap-2 md:max-h-[400px]">
-        <Steps currentStep={currentStep} props={{ community }} />
+        <Steps
+          currentStep={currentStep}
+          props={{ community, membershipDeposit }}
+        />
       </div>
 
       {isButtonAvailable && (

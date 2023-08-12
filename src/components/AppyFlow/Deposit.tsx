@@ -1,18 +1,24 @@
+import { useMemo } from "react";
+import { formatEther, parseEther } from "viem";
 import { useAccount, useBalance } from "wagmi";
 import { Heading, Select } from "../../ui";
 import { TFlowProps } from "./types";
 
 function Deposit(props: TFlowProps) {
-  const { deposit } = props.community;
+  const { membershipDeposit } = props;
 
   const { address } = useAccount();
   const { data } = useBalance({
     address,
   });
 
+  const readableDeposit = useMemo(() => {
+    return formatEther(membershipDeposit);
+  }, [membershipDeposit]);
+
   return (
     <>
-      <Heading.H1>Final step! Deposit {deposit} ETH</Heading.H1>
+      <Heading.H1>Final step! Deposit {readableDeposit} ETH</Heading.H1>
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-col gap-6">
           <div>
