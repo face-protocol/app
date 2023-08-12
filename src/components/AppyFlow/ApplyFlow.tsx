@@ -65,17 +65,20 @@ function NextStepButton({
   }
 }
 
-function ApplyFlow() {
+type TApplyFlowProps = {
+  defaultStep?: number;
+};
+
+function ApplyFlow({ defaultStep = STEPS.Apply }: TApplyFlowProps) {
   const community = COMMUNITY_MOCK;
 
   const { state } = useApplicationState();
 
   const { address } = useAccount();
-  const { data: membershipDeposit = 0n, isSuccess: isCommunitySuccess } =
-    useCommunityMembershipDeposit({
-      chainId: DEFAULT_CHAIN_ID,
-      address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
-    });
+  const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
+    chainId: DEFAULT_CHAIN_ID,
+    address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+  });
 
   const { write, data, isLoading } = useCommunityApplyForMembership({
     chainId: DEFAULT_CHAIN_ID,
@@ -93,7 +96,7 @@ function ApplyFlow() {
     },
   });
 
-  const [currentStep, setCurrentStep] = useState(STEPS.Apply);
+  const [currentStep, setCurrentStep] = useState(defaultStep);
 
   const onClickContinue = async () => {
     switch (currentStep) {
