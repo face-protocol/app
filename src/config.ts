@@ -14,6 +14,6 @@ const CONTRACTS: TContracts = {
   FACTORY: {
     [optimismGoerli.id]: "0x963a68D8a57E8E863Cd4E6411B7321988280465f",
   },
-};
+} as const;
 
 export { DEFAULT_CHAIN_ID, CONTRACTS, optimismGoerli };

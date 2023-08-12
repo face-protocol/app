@@ -1,16 +1,67 @@
+import { parseEther } from "viem";
+import { useAccount } from "wagmi";
+import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
+import {
+  useCommunityFactoryCreateCommunity,
+  useCommunityFactoryNewCommunityEvent,
+} from "../../generated";
 import { COMMUNITY_VERIFICATION_APPS } from "../../models";
 import { Button, Heading } from "../../ui";
 
 function CreateCommunity() {
+  const { address } = useAccount();
+  const { write, isLoading } = useCommunityFactoryCreateCommunity({
+    chainId: DEFAULT_CHAIN_ID,
+    address: CONTRACTS.FACTORY[DEFAULT_CHAIN_ID],
+    value: 0n,
+  });
+
+  useCommunityFactoryNewCommunityEvent({
+    chainId: DEFAULT_CHAIN_ID,
+    address: CONTRACTS.FACTORY[DEFAULT_CHAIN_ID],
+    listener: (event) => {
+      const { community } = event[0].args;
+    },
+  });
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const target = e.target as typeof e.target & {
+      communityName: { value: string };
+      depositAmount: { value: string };
+      membersToAccept: { value: number };
+    };
+
+    const depositEth = parseEther(target.depositAmount.value);
+
+    await write({
+      value: depositEth,
+      args: [
+        {
+          name: target.communityName.value,
+          symbol: target.communityName.value,
+          rulesURI: "https://rules.heliax.app",
+          membershipDeposit: depositEth,
+          membershipVotesThreshold: BigInt(target.membersToAccept.value),
+          votingDuration: 100n,
+          initialMembers: [address!],
+        },
+      ],
+    });
+  };
+
   return (
     <>
       <Heading.H1>Create a community</Heading.H1>
-      <div className="mt-10">
+      <form className="mt-10" onSubmit={handleFormSubmit}>
         <div>Community name</div>
         <div className="mt-2">
           <input
+            name="communityName"
             className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
             placeholder="YC Alumni"
+            required
           />
         </div>
 
@@ -20,6 +71,8 @@ function CreateCommunity() {
           <div>Deposit amount</div>
           <div className="mt-2">
             <input
+              name="depositAmount"
+              required
               className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
               placeholder="0.01 ETH"
             />
@@ -30,10 +83,11 @@ function CreateCommunity() {
           <div>How many people should accept a new member?</div>
           <div className="mt-2">
             <input
+              name="membersToAccept"
+              required
               className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
               placeholder="3"
               defaultValue={3}
-              type="number"
             />
           </div>
         </div>
@@ -42,6 +96,8 @@ function CreateCommunity() {
           <div>Link to community logo</div>
           <div className="mt-2">
             <input
+              name="communityLogo"
+              required
               className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
               placeholder="https://"
             />
@@ -68,8 +124,10 @@ function CreateCommunity() {
           </div>
         </div>
 
-        <Button className="mt-4">Create</Button>
-      </div>
+        <Button type="submit" className="mt-4" disabled={isLoading}>
+          {isLoading ? "Creating..." : "Create"}
+        </Button>
+      </form>
     </>
   );
 }

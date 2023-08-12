@@ -10,14 +10,14 @@ import { useCommunityMembershipDeposit } from "../../generated";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
 import { formatEther, parseEther } from "viem";
 
-function RequestToJoin(props: TFlowProps) {
+function RequestToJoin({ contractAddress }: TFlowProps) {
   const profiles = USERS_MOCK;
   const { address } = useAccount();
   const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
     chainId: DEFAULT_CHAIN_ID,
-    address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+    address: contractAddress,
   });
-  const { data } = useAccountCommunityApplication();
+  const { data } = useAccountCommunityApplication(contractAddress);
 
   const votesFor = data && Number(data[2]);
   const needReputation = formatEther(membershipDeposit * 3n);

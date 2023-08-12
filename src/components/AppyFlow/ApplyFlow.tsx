@@ -66,10 +66,14 @@ function NextStepButton({
 }
 
 type TApplyFlowProps = {
+  contractAddress: `0x${string}`;
   defaultStep?: number;
 };
 
-function ApplyFlow({ defaultStep = STEPS.Apply }: TApplyFlowProps) {
+function ApplyFlow({
+  defaultStep = STEPS.Apply,
+  contractAddress,
+}: TApplyFlowProps) {
   const community = COMMUNITY_MOCK;
 
   const { state } = useApplicationState();
@@ -77,12 +81,12 @@ function ApplyFlow({ defaultStep = STEPS.Apply }: TApplyFlowProps) {
   const { address } = useAccount();
   const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
     chainId: DEFAULT_CHAIN_ID,
-    address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+    address: contractAddress,
   });
 
   const { write, data, isLoading } = useCommunityApplyForMembership({
     chainId: DEFAULT_CHAIN_ID,
-    address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+    address: contractAddress,
     account: address,
     functionName: "applyForMembership",
     value: membershipDeposit,
@@ -136,7 +140,7 @@ function ApplyFlow({ defaultStep = STEPS.Apply }: TApplyFlowProps) {
       <div className="flex h-full w-full flex-col gap-2 md:max-h-[400px]">
         <Steps
           currentStep={currentStep}
-          props={{ community, membershipDeposit }}
+          props={{ community, membershipDeposit, contractAddress }}
         />
       </div>
 

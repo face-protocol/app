@@ -12,15 +12,11 @@ const router = createBrowserRouter([
     element: <LendingPage />,
   },
   {
-    path: "/create",
+    path: "*",
     element: <CreateCommunityPage />,
   },
   {
-    path: "/community",
-    element: <CommunityPage />,
-  },
-  {
-    path: "*",
+    path: "/community/:community",
     element: <ApplyToCommunityPage />,
   },
 ]);
