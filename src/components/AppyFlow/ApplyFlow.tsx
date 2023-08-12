@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { COMMUNITY_MOCK } from "../../mocks/mocks";
 import { useApplicationState } from "../../store";
 import { Button } from "../../ui";
@@ -12,11 +12,9 @@ import {
   useCommunityApplyForMembership,
   useCommunityMembershipDeposit,
 } from "../../generated";
-import { HELIA_JSON } from "../../ipfs";
+import { HELIA_JSON, HELIA } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
 import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
-import { etherUnits, formatGwei, gweiUnits, parseEther } from "viem";
-import { config } from "../../wagmi";
 
 function Steps({
   currentStep,
@@ -99,13 +97,17 @@ function ApplyFlow() {
   const onClickContinue = async () => {
     switch (currentStep) {
       case STEPS.Deposit: {
-        // const hash = await HELIA_JSON.add({
-        //   test: 123,
-        // });
-        // console.log("hash", hash.toString());
+        const hashInfo = await HELIA_JSON.add({
+          test: "15.10",
+        });
+
+        const hash = hashInfo.toString();
+        // console.log("hash", hash);
+        // const cid = CID.parse(hash);
+        // const test = await HELIA_JSON.get(cid);
         // console.log(await HELIA_JSON.get(hash));
         // debugger;
-        const hash = "test";
+        // const hash = "test";
         await write({
           args: [hash],
         });

@@ -9,9 +9,7 @@ type TContracts = {
 };
 const CONTRACTS: TContracts = {
   COMMUNITY: {
-    // 0x963a68d8a57e8e863cd4e6411b7321988280465f
-    // 0x8176e84744fafd7f3a9b497339563d8f55829ffb
-    [optimismGoerli.id]: "0x8176e84744fafd7f3a9b497339563d8f55829ffb",
+    [optimismGoerli.id]: "0x1f6fe24d1ae85d66cfc9391176163fd2bf495d73",
   },
 };
 
