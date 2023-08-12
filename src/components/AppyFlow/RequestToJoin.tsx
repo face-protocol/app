@@ -4,19 +4,36 @@ import { ActionButton } from "../../ui/ActionButton";
 import { TFlowProps } from "./types";
 
 import linkedInSrc from "../assets/linkedin.png";
+import { useAccountCommunityApplication } from "../../hooks";
+import { useAccount } from "wagmi";
+import { useCommunityMembershipDeposit } from "../../generated";
+import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
+import { formatEther, parseEther } from "viem";
 
 function RequestToJoin(props: TFlowProps) {
   const profiles = USERS_MOCK;
+  const { address } = useAccount();
+  const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
+    chainId: DEFAULT_CHAIN_ID,
+    address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
+  });
+  const { data } = useAccountCommunityApplication();
+
+  const votesFor = data && Number(data[2]);
+  const needReputation = formatEther(membershipDeposit * 3n);
+
   return (
     <>
       <Heading.H1>
         Done! To be accepted, please ask your friend to approve your request.
       </Heading.H1>
       <div>
-        You require approval from friends who collectively have a reputation of
-        0.03 ETH
+        You require approval from friends who collectively have a reputation of{" "}
+        {needReputation} ETH
       </div>
-      <div className="font-semibold text-attention">0 / 0.03 ETH</div>
+      <div className="font-semibold text-attention">
+        {votesFor} / {needReputation} ETH
+      </div>
       <div className="mt-10 flex items-center justify-between">
         <div>Copy the application link</div>
         <div>
