@@ -76,6 +76,7 @@ function ApplyFlow() {
       chainId: DEFAULT_CHAIN_ID,
       address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
     });
+
   const { write, data, isLoading } = useCommunityApplyForMembership({
     chainId: DEFAULT_CHAIN_ID,
     address: CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID],
@@ -102,15 +103,13 @@ function ApplyFlow() {
         });
 
         const hash = hashInfo.toString();
-        // console.log("hash", hash);
-        // const cid = CID.parse(hash);
-        // const test = await HELIA_JSON.get(cid);
-        // console.log(await HELIA_JSON.get(hash));
-        // debugger;
-        // const hash = "test";
+
+        console.log("hash", hash);
+
         await write({
           args: [hash],
         });
+
         break;
       }
       case STEPS.Apply:
@@ -125,7 +124,9 @@ function ApplyFlow() {
     Object.keys(state).length >= community.requestToApply.length;
 
   const isButtonAvailable =
-    [STEPS.Apply, STEPS.Deposit].includes(currentStep) && isFlowAvailable;
+    [STEPS.Apply, STEPS.Deposit].includes(currentStep) &&
+    isFlowAvailable &&
+    address;
 
   return (
     <section className="flex h-full flex-col gap-3">

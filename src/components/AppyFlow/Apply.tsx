@@ -1,4 +1,4 @@
-import { useAccount, useEnsName } from "wagmi";
+import { useAccount, useConnect, useEnsName } from "wagmi";
 import { TCommunityVerificationApps } from "../../models";
 import { useApplicationState } from "../../store";
 import { Heading } from "../../ui";
@@ -12,6 +12,8 @@ function Apply(props: TFlowProps) {
     actions: { addApplication },
   } = useApplicationState();
 
+  const { connect } = useConnect();
+
   const { address } = useAccount();
   const { data: ens } = useEnsName({
     address,
@@ -21,7 +23,8 @@ function Apply(props: TFlowProps) {
   const communityActions: {
     [key in TCommunityVerificationApps]: () => any;
   } = {
-    Wallet: () => {
+    Wallet: async () => {
+      await connect();
       return {
         address,
         ens,

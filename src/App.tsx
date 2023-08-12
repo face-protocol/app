@@ -2,6 +2,8 @@ import { ApplyToCommunityPage, CommunityPage } from "./pages";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { LendingPage } from "./pages/LendingPage";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useConnect } from "wagmi";
+import { ConnectWalletPages } from "./pages/ConnectWalletPages";
 
 const router = createBrowserRouter([
   {
@@ -19,13 +21,22 @@ const router = createBrowserRouter([
 ]);
 
 export function App() {
+  const { isConnected, isConnecting } = useAccount();
   return (
     <>
-      <header className="flex w-full items-center justify-center p-2">
-        <ConnectButton chainStatus="icon" />
+      <header className="flex h-[56px] w-full items-center justify-center p-2">
+        {isConnected && <ConnectButton chainStatus="icon" />}
       </header>
       <main className="m-auto mt-3 h-full w-full max-w-[480px] p-4 md:mt-[160px] md:pt-0">
-        <RouterProvider router={router} />
+        {!isConnecting && (
+          <>
+            {isConnected ? (
+              <RouterProvider router={router} />
+            ) : (
+              <ConnectWalletPages />
+            )}
+          </>
+        )}
       </main>
     </>
   );
