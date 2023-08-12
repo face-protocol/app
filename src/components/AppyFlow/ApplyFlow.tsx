@@ -109,7 +109,6 @@ function ApplyFlow({
         //   test: "15.10",
         // });
 
-        // const hash = hashInfo.toString();
         const hash = "23232323232";
 
         await write({
