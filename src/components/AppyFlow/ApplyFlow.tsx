@@ -12,7 +12,7 @@ import {
   useCommunityApplyForMembership,
   useCommunityMembershipDeposit,
 } from "../../generated";
-import { HELIA_JSON, HELIA } from "../../ipfs";
+// import { HELIA_JSON, HELIA } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
 import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
 
@@ -105,13 +105,12 @@ function ApplyFlow({
   const onClickContinue = async () => {
     switch (currentStep) {
       case STEPS.Deposit: {
-        const hashInfo = await HELIA_JSON.add({
-          test: "15.10",
-        });
+        // const hashInfo = await HELIA_JSON.add({
+        //   test: "15.10",
+        // });
 
-        const hash = hashInfo.toString();
-
-        console.log("hash", hash);
+        // const hash = hashInfo.toString();
+        const hash = "23232323232";
 
         await write({
           args: [hash],
