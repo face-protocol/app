@@ -29,7 +29,7 @@ function ApplyToCommunityPage() {
     return <div>Loading...</div>;
   }
 
-  const isAlreadyApplied = !!application;
+  const isAlreadyApplied = !!application && !!application[0];
   const isAlreadyMember = !!balanceOfAddress;
 
   console.log("balanceOfAddress", balanceOfAddress);
