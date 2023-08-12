@@ -12,7 +12,6 @@ import { formatEther, parseEther } from "viem";
 
 function RequestToJoin({ contractAddress }: TFlowProps) {
   const profiles = USERS_MOCK;
-  const { address } = useAccount();
   const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
     chainId: DEFAULT_CHAIN_ID,
     address: contractAddress,

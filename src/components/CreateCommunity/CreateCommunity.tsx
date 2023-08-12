@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
@@ -9,6 +11,10 @@ import { COMMUNITY_VERIFICATION_APPS } from "../../models";
 import { Button, Heading } from "../../ui";
 
 function CreateCommunity() {
+  const navigate = useNavigate();
+
+  const [isCreating, setIsCreating] = useState(false);
+
   const { address } = useAccount();
   const { write, isLoading } = useCommunityFactoryCreateCommunity({
     chainId: DEFAULT_CHAIN_ID,
@@ -21,6 +27,8 @@ function CreateCommunity() {
     address: CONTRACTS.FACTORY[DEFAULT_CHAIN_ID],
     listener: (event) => {
       const { community } = event[0].args;
+
+      navigate(`/community/${community}`);
     },
   });
 
@@ -49,6 +57,8 @@ function CreateCommunity() {
         },
       ],
     });
+
+    setIsCreating(true);
   };
 
   return (
@@ -124,8 +134,16 @@ function CreateCommunity() {
           </div>
         </div>
 
-        <Button type="submit" className="mt-4" disabled={isLoading}>
-          {isLoading ? "Creating..." : "Create"}
+        <Button
+          type="submit"
+          className="mt-4"
+          disabled={isLoading || isCreating}
+        >
+          {isLoading
+            ? "Sign transaction"
+            : isCreating
+            ? "Creating..."
+            : "Create"}
         </Button>
       </form>
     </>
