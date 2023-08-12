@@ -1,5 +1,5 @@
 import { COMMUNITY_VERIFICATION_APPS } from "../../models";
-import { Heading } from "../../ui";
+import { Button, Heading } from "../../ui";
 
 function CreateCommunity() {
   return (
@@ -67,6 +67,8 @@ function CreateCommunity() {
             ))}
           </div>
         </div>
+
+        <Button className="mt-4">Create</Button>
       </div>
     </>
   );
