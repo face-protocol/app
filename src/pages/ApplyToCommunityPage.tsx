@@ -39,7 +39,7 @@ function ApplyToCommunityPage() {
   }
 
   if (isAlreadyMember) {
-    return <Community />;
+    return <Community contractAddress={contractAddress} />;
   }
 
   return (

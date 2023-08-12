@@ -1,11 +1,34 @@
+import { useMemo } from "react";
+import { formatEther } from "viem";
+import { useAccount } from "wagmi";
+import { DEFAULT_CHAIN_ID } from "../../config";
+import {
+  useCommunityBalanceOf,
+  useCommunityReputationOf,
+} from "../../generated";
 import { USERS_MOCK } from "../../mocks/mocks";
 import { Heading, Profile } from "../../ui";
 import { ActionButton } from "../../ui/ActionButton";
 
 import baseSrc from "../assets/base.png";
 
-const CommunityView = () => {
+type TCommunityViewProps = {
+  contractAddress: `0x${string}`;
+};
+
+const CommunityView = ({ contractAddress }: TCommunityViewProps) => {
   const communityMembers = USERS_MOCK;
+
+  const { address } = useAccount();
+  const { data: reputationOf } = useCommunityReputationOf({
+    chainId: DEFAULT_CHAIN_ID,
+    address: contractAddress,
+    args: [address!],
+    enabled: !!address,
+  });
+
+  const userReputation =
+    typeof reputationOf === "bigint" && formatEther(reputationOf || 0n);
 
   return (
     <section className="flex h-full flex-col gap-3">
@@ -15,7 +38,9 @@ const CommunityView = () => {
         <div className="mt-10 flex flex-col gap-1">
           <div className="flex gap-1 font-medium text-white">
             <div>Your reputation:</div>
-            <div className="text-attention">1.00 ETH</div>
+            {userReputation && (
+              <div className="text-attention">{userReputation} ETH</div>
+            )}
           </div>
 
           <div className="flex gap-1 font-medium text-white">
