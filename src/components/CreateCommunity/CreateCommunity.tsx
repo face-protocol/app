@@ -10,10 +10,12 @@ import {
 import cx from "classnames";
 import { COMMUNITY_VERIFICATION_APPS, TCommunityRules } from "../../models";
 import { Button, Heading } from "../../ui";
-import { TIpfsFile, uploadToIpfs } from "../../ipfs";
+import { TIpfsFile, uploadToIpfs, uploadUserData } from "../../ipfs";
 
 function CreateCommunity() {
   const navigate = useNavigate();
+
+  const contractAddress = CONTRACTS.FACTORY[DEFAULT_CHAIN_ID];
 
   const [isCreating, setIsCreating] = useState(false);
   const [selectArr, setSelectArr] = useState<boolean[]>([]);
@@ -21,13 +23,13 @@ function CreateCommunity() {
   const { address } = useAccount();
   const { write, isLoading } = useCommunityFactoryCreateCommunity({
     chainId: DEFAULT_CHAIN_ID,
-    address: CONTRACTS.FACTORY[DEFAULT_CHAIN_ID],
+    address: contractAddress,
     value: 0n,
   });
 
   useCommunityFactoryNewCommunityEvent({
     chainId: DEFAULT_CHAIN_ID,
-    address: CONTRACTS.FACTORY[DEFAULT_CHAIN_ID],
+    address: contractAddress,
     listener: (event) => {
       const { community } = event[0].args;
 
@@ -66,6 +68,19 @@ function CreateCommunity() {
 
     const depositEth = parseEther(target.depositAmount.value);
 
+    const userData = await uploadUserData(
+      {
+        address: address!,
+        name: "Max",
+        avatarSrc:
+          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fnordic.ign.com%2Favatar-generations&psig=AOvVaw2RIpImeBSGmbsl3Ujvnssr&ust=1692019649657000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCh9cPe2YADFQAAAAAdAAAAABAD",
+      },
+      contractAddress,
+      address!,
+    );
+
+    const initialMembersDatas = [userData];
+
     await write({
       value: depositEth,
       args: [
@@ -77,6 +92,7 @@ function CreateCommunity() {
           membershipVotesThreshold: BigInt(target.membersToAccept.value),
           votingDuration: 100n,
           initialMembers: [address!],
+          initialMembersDatas,
         },
       ],
     });

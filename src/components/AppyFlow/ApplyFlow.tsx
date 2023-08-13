@@ -15,7 +15,12 @@ import {
 // import { HELIA_JSON, HELIA } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
 import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
-import { TIpfsFile, uploadToIpfs, web3Storage } from "../../ipfs";
+import {
+  TIpfsFile,
+  uploadToIpfs,
+  uploadUserData,
+  web3Storage,
+} from "../../ipfs";
 
 function Steps({
   currentStep,
@@ -106,19 +111,16 @@ function ApplyFlow({
   const onClickContinue = async () => {
     switch (currentStep) {
       case STEPS.Deposit: {
-        const filesPath = `${contractAddress}/${address}.json`;
-        const data: TIpfsFile[] = [
+        const path = await uploadUserData(
           {
-            path: filesPath,
-            content: {
-              avatarUrl: "some url",
-              name: "some name",
-              description: "some description",
-            },
+            address: address!,
+            name: "John",
+            avatarSrc:
+              "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cosmopolitan.com%2Fentertainment%2Fmovies%2Fa42734768%2Fhow-to-watch-avatar-2-way-of-water-streaming%2F&psig=AOvVaw2RIpImeBSGmbsl3Ujvnssr&ust=1692019649657000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCh9cPe2YADFQAAAAAdAAAAABAJ",
           },
-        ];
-        const response = await uploadToIpfs(data);
-        const { path } = response.result[0];
+          contractAddress,
+          address!,
+        );
 
         await write({
           args: [path],

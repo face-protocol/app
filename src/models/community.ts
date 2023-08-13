@@ -9,7 +9,19 @@ type TCommunity = {
 
 type TCommunityRules = {
   communityAvatarURL: string;
+  countOfApprovals: number;
+};
+
+type TUserData = {
+  avatarSrc: string;
+  name: string;
+  address: string;
 };
 
 export { COMMUNITY_VERIFICATION_APPS };
-export type { TCommunityRules, TCommunity, TCommunityVerificationApps };
+export type {
+  TUserData,
+  TCommunityRules,
+  TCommunity,
+  TCommunityVerificationApps,
+};
