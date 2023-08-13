@@ -86,6 +86,7 @@ function Apply(props: TFlowProps) {
                   handleVerify={verifyProof}
                   credential_types={[CredentialType.Orb]}
                   onSuccess={() => {}}
+                  autoClose
                 >
                   {({ open }) => (
                     <button onClick={open} className="hover:opacity-80">
