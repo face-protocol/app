@@ -37,6 +37,7 @@ function CreateCommunity() {
 
     const target = e.target as typeof e.target & {
       communityName: { value: string };
+      communitySymbol: { value: string };
       depositAmount: { value: string };
       membersToAccept: { value: number };
     };
@@ -48,7 +49,7 @@ function CreateCommunity() {
       args: [
         {
           name: target.communityName.value,
-          symbol: target.communityName.value,
+          symbol: target.communitySymbol.value,
           rulesURI: "https://rules.heliax.app",
           membershipDeposit: depositEth,
           membershipVotesThreshold: BigInt(target.membersToAccept.value),
@@ -71,6 +72,16 @@ function CreateCommunity() {
             name="communityName"
             className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
             placeholder="YC Alumni"
+            required
+          />
+        </div>
+
+        <div>Community symbol</div>
+        <div className="mt-2">
+          <input
+            name="communitySymbol"
+            className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
+            placeholder="YC"
             required
           />
         </div>
