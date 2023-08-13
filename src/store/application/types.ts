@@ -7,9 +7,11 @@ type TApplicationState = {
 };
 
 type TUseApplicationState = {
+  isFinishedForm: boolean;
   state: TApplicationState;
   actions: {
     drop: VoidFunction;
+    setFinishedForm: (isFinishedForm: boolean) => void;
     addApplication: (
       id: TCommunityVerificationApps,
       application: TStateValue,

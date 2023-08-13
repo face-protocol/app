@@ -34,7 +34,7 @@ function RequestToJoin({ contractAddress }: TFlowProps) {
 
   useFetchCommunityUsers(contractAddress);
   const { queryData } = useReactQuery(
-    ["fetch", "all", "events", contractAddress],
+    ["fetch", "all", "events", contractAddress, chain?.id],
     () => {
       return fetchAllEvents(contractAddress, chain?.id!);
     },

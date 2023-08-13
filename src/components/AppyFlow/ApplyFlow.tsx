@@ -82,7 +82,10 @@ function ApplyFlow({
 }: TApplyFlowProps) {
   const community = COMMUNITY_MOCK;
 
-  const { state } = useApplicationState();
+  const {
+    state,
+    actions: { setFinishedForm },
+  } = useApplicationState();
 
   const { chain } = useNetwork();
   const { address } = useAccount();
@@ -126,6 +129,8 @@ function ApplyFlow({
         await write({
           args: [path],
         });
+
+        setFinishedForm(true);
 
         break;
       }

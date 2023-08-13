@@ -3,6 +3,7 @@ import { TCommunityVerificationApps } from "../../models";
 import { TStateValue, TUseApplicationState } from "./types";
 
 const defaultState: Omit<TUseApplicationState, "actions"> = {
+  isFinishedForm: false,
   state: {},
 };
 
@@ -12,6 +13,11 @@ const useApplicationState = create<TUseApplicationState>((set, get) => ({
     drop: () => {
       set((state) => ({
         state: {},
+      }));
+    },
+    setFinishedForm: (isFinishedForm: boolean) => {
+      set((state) => ({
+        isFinishedForm,
       }));
     },
     addApplication: (
