@@ -21,17 +21,9 @@ function Apply(props: TFlowProps) {
     chainId: 1,
   });
 
-  const veryfyProof = (data) => {
-    console.log("data", data);
-    debugger;
+  const verifyProof = (data) => {
+    addApplication("WorldID", data);
   };
-
-  const { open, setOpen } = useIDKit({
-    signal: "my-signal",
-    handleVerify: veryfyProof,
-    actionId: "get_this_from_the_dev_portal",
-    walletConnectProjectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
-  });
 
   const communityActions: {
     [key in TCommunityVerificationApps]: () => any;

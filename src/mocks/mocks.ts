@@ -6,7 +6,7 @@ import avatarAvichal from "./assets/avatar_avichal.png";
 
 const COMMUNITY_MOCK: TCommunity = {
   title: "Stanford",
-  requestToApply: ["X", "WorldID", "Wallet"],
+  requestToApply: ["WorldID", "Wallet"],
   deposit: 0.05,
 };
 
