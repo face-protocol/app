@@ -76,7 +76,7 @@ function CreateCommunity() {
           />
         </div>
 
-        <div>Community symbol</div>
+        <div className="mt-4">Community symbol</div>
         <div className="mt-2">
           <input
             name="communitySymbol"
