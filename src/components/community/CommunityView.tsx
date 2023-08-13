@@ -1,12 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 import { DEFAULT_CHAIN_ID } from "../../config";
 import {
   useCommunityBalanceOf,
   useCommunityReputationOf,
+  useCommunityRulesUri,
 } from "../../generated";
 import { USERS_MOCK } from "../../mocks/mocks";
+import { TCommunityRules } from "../../models";
 import { Heading, Profile } from "../../ui";
 import { ActionButton } from "../../ui/ActionButton";
 
@@ -27,13 +29,32 @@ const CommunityView = ({ contractAddress }: TCommunityViewProps) => {
     enabled: !!address,
   });
 
+  const [rulesData, setRulesData] = useState<TCommunityRules | null>(null);
+
+  const { isFetched } = useCommunityRulesUri({
+    chainId: DEFAULT_CHAIN_ID,
+    address: contractAddress,
+    onSuccess: async (url) => {
+      const json = await fetch(url);
+      const data = await json.json();
+
+      setRulesData(data);
+    },
+  });
+
   const userReputation =
     typeof reputationOf === "bigint" && formatEther(reputationOf || 0n);
+
+  if (!isFetched || !rulesData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="flex h-full flex-col gap-3">
       <div className="flex h-full w-full flex-col gap-2 md:max-h-[400px]">
         <Heading.H1>Stanford community</Heading.H1>
+
+        <img src={rulesData.communityAvatarURL} className="mt-3 w-full" />
 
         <div className="mt-10 flex flex-col gap-1">
           <div className="flex gap-1 font-medium text-white">
@@ -69,6 +90,23 @@ const CommunityView = ({ contractAddress }: TCommunityViewProps) => {
         <section className="mt-10">
           <header className="flex items-center justify-between ">
             <div className="font-semibold">Community members</div>
+            <div className="text-gray-500 ">Boosts: 3/5</div>
+          </header>
+          <main className="flex flex-col gap-3">
+            {communityMembers.map((member) => (
+              <Profile
+                type="member"
+                profile={member}
+                action={<ActionButton>Boost reputation</ActionButton>}
+                community={{ title: "Base", src: baseSrc }}
+              />
+            ))}
+          </main>
+        </section>
+
+        <section className="my-10">
+          <header className="flex items-center justify-between ">
+            <div className="font-semibold">Requests to join community:</div>
             <div className="text-gray-500 ">Boosts: 3/5</div>
           </header>
           <main className="flex flex-col gap-3">

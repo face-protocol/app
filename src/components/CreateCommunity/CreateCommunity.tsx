@@ -7,13 +7,16 @@ import {
   useCommunityFactoryCreateCommunity,
   useCommunityFactoryNewCommunityEvent,
 } from "../../generated";
-import { COMMUNITY_VERIFICATION_APPS } from "../../models";
+import cx from "classnames";
+import { COMMUNITY_VERIFICATION_APPS, TCommunityRules } from "../../models";
 import { Button, Heading } from "../../ui";
+import { TIpfsFile, uploadToIpfs } from "../../ipfs";
 
 function CreateCommunity() {
   const navigate = useNavigate();
 
   const [isCreating, setIsCreating] = useState(false);
+  const [selectArr, setSelectArr] = useState<boolean[]>([]);
 
   const { address } = useAccount();
   const { write, isLoading } = useCommunityFactoryCreateCommunity({
@@ -37,10 +40,28 @@ function CreateCommunity() {
 
     const target = e.target as typeof e.target & {
       communityName: { value: string };
+      communityLogo: { value: string };
       communitySymbol: { value: string };
       depositAmount: { value: string };
       membersToAccept: { value: number };
     };
+
+    const avatarSrc = target.communityLogo.value;
+    const rules: TCommunityRules = {
+      communityAvatarURL: avatarSrc,
+    };
+
+    const pathNameHash = btoa(
+      `${JSON.stringify(rules)}${new Date().toDateString()}`,
+    );
+    const dataToUpload: TIpfsFile[] = [
+      {
+        path: `${pathNameHash}.json`,
+        content: rules,
+      },
+    ];
+    const rulesResponse = await uploadToIpfs(dataToUpload);
+    const rulesURI = rulesResponse.result[0].path;
 
     const depositEth = parseEther(target.depositAmount.value);
 
@@ -50,7 +71,7 @@ function CreateCommunity() {
         {
           name: target.communityName.value,
           symbol: target.communitySymbol.value,
-          rulesURI: "https://rules.heliax.app",
+          rulesURI,
           membershipDeposit: depositEth,
           membershipVotesThreshold: BigInt(target.membersToAccept.value),
           votingDuration: 100n,
@@ -114,13 +135,14 @@ function CreateCommunity() {
         </div>
 
         <div className="mt-6">
-          <div>Link to community logo</div>
+          <div>Link to the community logo</div>
           <div className="mt-2">
             <input
               name="communityLogo"
               required
               className="rounded-md bg-white/25 p-1 text-white placeholder:text-white/40"
-              placeholder="https://"
+              placeholder="https://..."
+              type="string"
             />
           </div>
         </div>
@@ -131,14 +153,30 @@ function CreateCommunity() {
             (Choose at least two)
           </div>
           <div className="mt-2">
-            {COMMUNITY_VERIFICATION_APPS.map((id) => (
+            {COMMUNITY_VERIFICATION_APPS.map((id, i) => (
               <div key={id} className="flex justify-between">
                 <p className="flex gap-2">
                   <div></div>
                   <div className="font-medium">{id}</div>
                 </p>
-                <div className="font-medium text-attention">
-                  <button className="hover:opacity-80">add</button>
+                <div
+                  className={cx(
+                    "font-medium",
+                    selectArr[i] ? "text-red-600" : "text-attention",
+                  )}
+                >
+                  <button
+                    className="hover:opacity-80"
+                    onClick={() =>
+                      setSelectArr((arr) => {
+                        const newArr = [...arr];
+                        newArr[i] = !newArr[i];
+                        return newArr;
+                      })
+                    }
+                  >
+                    {selectArr[i] ? "remove" : "add"}
+                  </button>
                 </div>
               </div>
             ))}

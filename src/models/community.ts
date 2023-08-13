@@ -7,5 +7,9 @@ type TCommunity = {
   requestToApply: TCommunityVerificationApps[];
 };
 
+type TCommunityRules = {
+  communityAvatarURL: string;
+};
+
 export { COMMUNITY_VERIFICATION_APPS };
-export type { TCommunity, TCommunityVerificationApps };
+export type { TCommunityRules, TCommunity, TCommunityVerificationApps };
