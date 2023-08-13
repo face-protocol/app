@@ -83,7 +83,7 @@ function Apply(props: TFlowProps) {
                 <IDKitWidget
                   app_id={import.meta.env.VITE_WORLD_APP_ID}
                   action="login"
-                  handleVerify={veryfyProof}
+                  handleVerify={verifyProof}
                   credential_types={[CredentialType.Orb]}
                   onSuccess={() => {}}
                 >
