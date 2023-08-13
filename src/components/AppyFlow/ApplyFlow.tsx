@@ -13,7 +13,13 @@ import {
   useCommunityMembershipDeposit,
 } from "../../generated";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
-import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useConnect,
+  useNetwork,
+  useWaitForTransaction,
+} from "wagmi";
 import { TIpfsFile, uploadToIpfs, uploadUserData } from "../../ipfs";
 
 function Steps({
@@ -78,14 +84,15 @@ function ApplyFlow({
 
   const { state } = useApplicationState();
 
+  const { chain } = useNetwork();
   const { address } = useAccount();
   const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     address: contractAddress,
   });
 
   const { write, data, isLoading } = useCommunityApplyForMembership({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     address: contractAddress,
     account: address,
     functionName: "applyForMembership",
@@ -94,7 +101,7 @@ function ApplyFlow({
 
   useWaitForTransaction({
     hash: data?.hash,
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     onSuccess: () => {
       setCurrentStep((prev) => prev + 1);
     },

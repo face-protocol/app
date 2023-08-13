@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parseEther } from "viem";
-import { useAccount, useConnect, useEnsName } from "wagmi";
+import { useAccount, useConnect, useEnsName, useNetwork } from "wagmi";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
 import {
   useCommunityFactoryCreateCommunity,
@@ -20,8 +20,8 @@ import { useApplicationState } from "../../store";
 
 function CreateCommunity() {
   const navigate = useNavigate();
-
-  const contractAddress = CONTRACTS.FACTORY[DEFAULT_CHAIN_ID];
+  const { chain } = useNetwork();
+  const contractAddress = CONTRACTS.FACTORY[chain?.id || DEFAULT_CHAIN_ID];
 
   const {
     state,
@@ -30,16 +30,17 @@ function CreateCommunity() {
 
   const [isCreating, setIsCreating] = useState(false);
   const [selectArr, setSelectArr] = useState<boolean[]>([]);
+  const { chain } = useNetwork();
 
   const { address } = useAccount();
   const { writeAsync, isLoading } = useCommunityFactoryCreateCommunity({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     address: contractAddress,
     value: 0n,
   });
 
   useCommunityFactoryNewCommunityEvent({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     address: contractAddress,
     listener: (event) => {
       const { community } = event[0].args;

@@ -8,7 +8,7 @@ import {
   useAccountCommunityApplication,
   useFetchCommunityRules,
 } from "../../hooks";
-import { useAccount, useQuery as useReactQuery } from "wagmi";
+import { useAccount, useNetwork, useQuery as useReactQuery } from "wagmi";
 import { useCommunityMembershipDeposit } from "../../generated";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
 import { formatEther, parseEther } from "viem";
@@ -19,15 +19,13 @@ import { fetchAllEvents } from "../../ipfs";
 
 function RequestToJoin({ contractAddress }: TFlowProps) {
   const profiles = USERS_MOCK;
+  const { chain } = useNetwork();
   const { data: membershipDeposit = 0n } = useCommunityMembershipDeposit({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     address: contractAddress,
   });
   const { data } = useAccountCommunityApplication(contractAddress);
-  const { rulesData } = useFetchCommunityRules(
-    DEFAULT_CHAIN_ID,
-    contractAddress,
-  );
+  const { rulesData } = useFetchCommunityRules(chain?.id!, contractAddress);
 
   const votesFor = data && Number(data[2]);
   const needReputation = formatEther(
@@ -38,7 +36,7 @@ function RequestToJoin({ contractAddress }: TFlowProps) {
   const { queryData } = useReactQuery(
     ["fetch", "all", "events", contractAddress],
     () => {
-      return fetchAllEvents(contractAddress, DEFAULT_CHAIN_ID);
+      return fetchAllEvents(contractAddress, chain?.id!);
     },
   );
 

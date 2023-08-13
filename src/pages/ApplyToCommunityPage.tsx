@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { ApplyFlow, Community } from "../components";
 import { STEPS } from "../components/AppyFlow/config";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../config";
@@ -8,16 +8,18 @@ import { useAccountCommunityApplication } from "../hooks";
 
 function ApplyToCommunityPage() {
   const { community } = useParams();
+  const { chain } = useNetwork();
 
   const contractAddress: `0x${string}` =
-    (community as `0x${string}`) || CONTRACTS.COMMUNITY[DEFAULT_CHAIN_ID];
+    (community as `0x${string}`) ||
+    CONTRACTS.COMMUNITY[chain?.id || DEFAULT_CHAIN_ID];
 
   console.log("contractAddress", contractAddress);
 
   const { address } = useAccount();
   const { data: balanceOfAddress, isFetched: isBalanceFetched } =
     useCommunityBalanceOf({
-      chainId: DEFAULT_CHAIN_ID,
+      chainId: chain?.id!,
       address: contractAddress,
       args: [address!],
       enabled: !!address,

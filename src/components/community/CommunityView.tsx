@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { formatEther } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { DEFAULT_CHAIN_ID } from "../../config";
 import {
   useCommunityBalanceOf,
@@ -22,16 +22,17 @@ type TCommunityViewProps = {
 const CommunityView = ({ contractAddress }: TCommunityViewProps) => {
   const communityMembers = USERS_MOCK;
 
+  const { chain } = useNetwork();
   const { address } = useAccount();
   const { data: reputationOf } = useCommunityReputationOf({
-    chainId: DEFAULT_CHAIN_ID,
+    chainId: chain?.id!,
     address: contractAddress,
     args: [address!],
     enabled: !!address,
   });
 
   const { rulesData, isFetched } = useFetchCommunityRules(
-    DEFAULT_CHAIN_ID,
+    chain?.id!,
     contractAddress,
   );
 
