@@ -9,7 +9,7 @@ function Button({
   return (
     <button
       className={cx(
-        "h-14 w-full rounded-[20px] bg-buttonGradient font-semibold text-white/80 transition-all hover:opacity-90 active:opacity-70",
+        "h-14 w-full rounded-[20px] bg-buttonGradient font-semibold text-white/80 transition-all hover:opacity-90 active:opacity-70 disabled:opacity-40",
         className,
       )}
       {...otherProps}

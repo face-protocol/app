@@ -1,4 +1,4 @@
-const COMMUNITY_VERIFICATION_APPS = ["X", "WorldID", "Wallet"] as const;
+const COMMUNITY_VERIFICATION_APPS = ["WorldID", "Wallet", "X"] as const;
 type TCommunityVerificationApps = (typeof COMMUNITY_VERIFICATION_APPS)[number];
 
 type TCommunity = {

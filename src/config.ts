@@ -8,6 +8,10 @@ type TContracts = {
   };
 };
 const CONTRACTS: TContracts = {
+  TOPIC: {
+    [optimismGoerli.id]:
+      "0x0875d6307b468f8deacd6a2e7c7a161f8ad13d9379838fa5c87b1df86b8fd9e9",
+  },
   COMMUNITY: {
     [optimismGoerli.id]: "0x1f6fe24d1ae85d66cfc9391176163fd2bf495d73",
   },

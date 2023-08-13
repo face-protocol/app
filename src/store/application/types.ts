@@ -9,6 +9,7 @@ type TApplicationState = {
 type TUseApplicationState = {
   state: TApplicationState;
   actions: {
+    drop: VoidFunction;
     addApplication: (
       id: TCommunityVerificationApps,
       application: TStateValue,

@@ -12,15 +12,9 @@ import {
   useCommunityApplyForMembership,
   useCommunityMembershipDeposit,
 } from "../../generated";
-// import { HELIA_JSON, HELIA } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
 import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
-import {
-  TIpfsFile,
-  uploadToIpfs,
-  uploadUserData,
-  web3Storage,
-} from "../../ipfs";
+import { TIpfsFile, uploadToIpfs, uploadUserData } from "../../ipfs";
 
 function Steps({
   currentStep,

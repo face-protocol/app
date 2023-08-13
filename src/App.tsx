@@ -26,11 +26,11 @@ const router = createBrowserRouter([
 export function App() {
   const { isConnected, isConnecting } = useAccount();
 
-  useEffect(() => {
-    Moralis.start({
-      apiKey: import.meta.env.VITE_STORAGE_API_KEY,
-    });
-  }, []);
+  // useEffect(() => {
+  //   Moralis.start({
+  //     apiKey: import.meta.env.VITE_STORAGE_API_KEY,
+  //   });
+  // }, []);
 
   return (
     <>

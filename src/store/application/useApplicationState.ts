@@ -9,6 +9,11 @@ const defaultState: Omit<TUseApplicationState, "actions"> = {
 const useApplicationState = create<TUseApplicationState>((set, get) => ({
   ...defaultState,
   actions: {
+    drop: () => {
+      set((state) => ({
+        state: {},
+      }));
+    },
     addApplication: (
       id: TCommunityVerificationApps,
       application: TStateValue,

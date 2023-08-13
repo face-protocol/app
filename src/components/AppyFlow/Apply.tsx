@@ -3,6 +3,7 @@ import { TCommunityVerificationApps } from "../../models";
 import { useApplicationState } from "../../store";
 import { Heading } from "../../ui";
 import { TFlowProps } from "./types";
+import { IDKitWidget, useIDKit, CredentialType } from "@worldcoin/idkit";
 
 function Apply(props: TFlowProps) {
   const { title, requestToApply } = props.community;
@@ -20,6 +21,18 @@ function Apply(props: TFlowProps) {
     chainId: 1,
   });
 
+  const veryfyProof = (data) => {
+    console.log("data", data);
+    debugger;
+  };
+
+  const { open, setOpen } = useIDKit({
+    signal: "my-signal",
+    handleVerify: veryfyProof,
+    actionId: "get_this_from_the_dev_portal",
+    walletConnectProjectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
+  });
+
   const communityActions: {
     [key in TCommunityVerificationApps]: () => any;
   } = {
@@ -31,6 +44,7 @@ function Apply(props: TFlowProps) {
       };
     },
     WorldID: () => {
+      // setOpen(true);
       return {
         status: "verified",
       };
@@ -73,7 +87,21 @@ function Apply(props: TFlowProps) {
               <div className="font-medium">{id}</div>
             </p>
             <div className="font-medium text-attention">
-              {state[id] ? (
+              {id === "WorldID" ? (
+                <IDKitWidget
+                  app_id={import.meta.env.VITE_WORLD_APP_ID}
+                  action="login"
+                  handleVerify={veryfyProof}
+                  credential_types={[CredentialType.Orb]}
+                  onSuccess={() => {}}
+                >
+                  {({ open }) => (
+                    <button onClick={open} className="hover:opacity-80">
+                      connect
+                    </button>
+                  )}
+                </IDKitWidget>
+              ) : state[id] ? (
                 communityState[id]
               ) : (
                 <button

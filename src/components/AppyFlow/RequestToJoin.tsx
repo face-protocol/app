@@ -8,13 +8,14 @@ import {
   useAccountCommunityApplication,
   useFetchCommunityRules,
 } from "../../hooks";
-import { useAccount } from "wagmi";
+import { useAccount, useQuery as useReactQuery } from "wagmi";
 import { useCommunityMembershipDeposit } from "../../generated";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
 import { formatEther, parseEther } from "viem";
 import { useQuery } from "@apollo/client";
 import { GET_COMMUNITY_USERS } from "../../graphql";
 import { useFetchCommunityUsers } from "../../hooks/useFetchCommunityUsers";
+import { fetchAllEvents } from "../../ipfs";
 
 function RequestToJoin({ contractAddress }: TFlowProps) {
   const profiles = USERS_MOCK;
@@ -33,7 +34,13 @@ function RequestToJoin({ contractAddress }: TFlowProps) {
     membershipDeposit * BigInt(rulesData?.countOfApprovals || 3),
   );
 
-  const { data: queryData } = useFetchCommunityUsers(contractAddress);
+  useFetchCommunityUsers(contractAddress);
+  const { queryData } = useReactQuery(
+    ["fetch", "all", "events", contractAddress],
+    () => {
+      return fetchAllEvents(contractAddress, DEFAULT_CHAIN_ID);
+    },
+  );
 
   console.log("queryData", queryData);
 

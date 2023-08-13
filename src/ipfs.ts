@@ -14,12 +14,18 @@
 // export { HELIA, HELIA_JSON };
 
 import Moralis from "moralis";
+import { CONTRACTS } from "./config";
+import { communityABI } from "./generated";
 import { TUserData } from "./models";
 
 type TIpfsFile = {
   path: string;
   content: any;
 };
+
+Moralis.start({
+  apiKey: import.meta.env.VITE_STORAGE_API_KEY,
+});
 
 const uploadToIpfs = async (files: TIpfsFile[]) => {
   return Moralis.EvmApi.ipfs.uploadFolder({
@@ -44,5 +50,31 @@ const uploadUserData = async (
   return path;
 };
 
+const fetchAllEvents = (address: string, chaind: number) => {
+  return Moralis.EvmApi.events.getContractEvents({
+    address,
+    topic: CONTRACTS.TOPIC[chaind],
+    abi: {
+      type: "event",
+      anonymous: false,
+      inputs: [
+        {
+          name: "member",
+          internalType: "address",
+          type: "address",
+          indexed: false,
+        },
+        {
+          name: "tokenId",
+          internalType: "uint256",
+          type: "uint256",
+          indexed: false,
+        },
+      ],
+      name: "NewMembership",
+    },
+  });
+};
+
 export type { TIpfsFile };
-export { uploadUserData, uploadToIpfs };
+export { fetchAllEvents, uploadUserData, uploadToIpfs };

@@ -1,27 +1,38 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parseEther } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect, useEnsName } from "wagmi";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
 import {
   useCommunityFactoryCreateCommunity,
   useCommunityFactoryNewCommunityEvent,
 } from "../../generated";
 import cx from "classnames";
-import { COMMUNITY_VERIFICATION_APPS, TCommunityRules } from "../../models";
+import {
+  COMMUNITY_VERIFICATION_APPS,
+  TCommunityRules,
+  TCommunityVerificationApps,
+} from "../../models";
 import { Button, Heading } from "../../ui";
 import { TIpfsFile, uploadToIpfs, uploadUserData } from "../../ipfs";
+import { CredentialType, IDKitWidget } from "@worldcoin/idkit";
+import { useApplicationState } from "../../store";
 
 function CreateCommunity() {
   const navigate = useNavigate();
 
   const contractAddress = CONTRACTS.FACTORY[DEFAULT_CHAIN_ID];
 
+  const {
+    state,
+    actions: { addApplication, drop },
+  } = useApplicationState();
+
   const [isCreating, setIsCreating] = useState(false);
   const [selectArr, setSelectArr] = useState<boolean[]>([]);
 
   const { address } = useAccount();
-  const { write, isLoading } = useCommunityFactoryCreateCommunity({
+  const { writeAsync, isLoading } = useCommunityFactoryCreateCommunity({
     chainId: DEFAULT_CHAIN_ID,
     address: contractAddress,
     value: 0n,
@@ -33,71 +44,138 @@ function CreateCommunity() {
     listener: (event) => {
       const { community } = event[0].args;
 
+      drop();
       navigate(`/community/${community}`);
     },
   });
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const target = e.target as typeof e.target & {
-      communityName: { value: string };
-      communityLogo: { value: string };
-      communitySymbol: { value: string };
-      depositAmount: { value: string };
-      membersToAccept: { value: number };
-    };
+      if (!state["WorldID"]) {
+        console.warn("Connect worldcoin id!");
+        return;
+      }
 
-    const avatarSrc = target.communityLogo.value;
-    const rules: TCommunityRules = {
-      communityAvatarURL: avatarSrc,
-      countOfApprovals: target.membersToAccept.value,
-    };
+      const target = e.target as typeof e.target & {
+        communityName: { value: string };
+        communityLogo: { value: string };
+        communitySymbol: { value: string };
+        depositAmount: { value: string };
+        membersToAccept: { value: number };
+      };
 
-    const pathNameHash = btoa(
-      `${JSON.stringify(rules)}${new Date().toDateString()}`,
-    );
-    const dataToUpload: TIpfsFile[] = [
-      {
-        path: `${pathNameHash}.json`,
-        content: rules,
-      },
-    ];
-    const rulesResponse = await uploadToIpfs(dataToUpload);
-    const rulesURI = rulesResponse.result[0].path;
+      const avatarSrc = target.communityLogo.value;
+      const rules: TCommunityRules = {
+        communityAvatarURL: avatarSrc,
+        countOfApprovals: target.membersToAccept.value,
+      };
 
-    const depositEth = parseEther(target.depositAmount.value);
-
-    const userData = await uploadUserData(
-      {
-        address: address!,
-        name: "Max",
-        avatarSrc:
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fnordic.ign.com%2Favatar-generations&psig=AOvVaw2RIpImeBSGmbsl3Ujvnssr&ust=1692019649657000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCh9cPe2YADFQAAAAAdAAAAABAD",
-      },
-      contractAddress,
-      address!,
-    );
-
-    const initialMembersDatas = [userData];
-
-    await write({
-      value: depositEth,
-      args: [
+      const pathNameHash = btoa(
+        `${JSON.stringify(rules)}${new Date().toDateString()}`,
+      );
+      const dataToUpload: TIpfsFile[] = [
         {
-          name: target.communityName.value,
-          symbol: target.communitySymbol.value,
-          rulesURI,
-          membershipDeposit: depositEth,
-          membershipVotesThreshold: BigInt(target.membersToAccept.value),
-          votingDuration: 100n,
-          initialMembers: [address!],
-          initialMembersDatas,
+          path: `${pathNameHash}.json`,
+          content: rules,
         },
-      ],
-    });
+      ];
+      const rulesResponse = await uploadToIpfs(dataToUpload);
+      const rulesURI = rulesResponse.result[0].path;
 
-    setIsCreating(true);
+      const depositEth = parseEther(target.depositAmount.value);
+
+      const userData = await uploadUserData(
+        {
+          address: address!,
+          name: "Max",
+          avatarSrc:
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fnordic.ign.com%2Favatar-generations&psig=AOvVaw2RIpImeBSGmbsl3Ujvnssr&ust=1692019649657000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCPCh9cPe2YADFQAAAAAdAAAAABAD",
+        },
+        contractAddress,
+        address!,
+      );
+
+      const initialMembersDatas = [userData];
+
+      await writeAsync({
+        value: depositEth,
+        args: [
+          {
+            name: target.communityName.value,
+            symbol: target.communitySymbol.value,
+            rulesURI,
+            membershipDeposit: depositEth,
+            membershipVotesThreshold: BigInt(target.membersToAccept.value),
+            votingDuration: 100n,
+            initialMembers: [address!],
+            initialMembersDatas,
+          },
+        ],
+      });
+      console.log("here");
+
+      setIsCreating(true);
+    } catch (error) {
+      setIsCreating(false);
+    }
+  };
+
+  console.log('tate["WorldID"]', state["WorldID"]);
+
+  const { connect } = useConnect();
+
+  const { data: ens } = useEnsName({
+    address,
+    chainId: 1,
+  });
+
+  const verifyProof = (data) => {
+    addApplication("WorldID", data);
+  };
+
+  const communityActions: {
+    [key in TCommunityVerificationApps]: () => any;
+  } = {
+    Wallet: async () => {
+      await connect();
+      return {
+        address,
+        ens,
+      };
+    },
+    WorldID: () => {
+      // setOpen(true);
+      return {
+        status: "verified",
+      };
+    },
+    X: () => {
+      return {
+        account: "Max | nrjshka.eth",
+      };
+    },
+  };
+
+  const communityState: {
+    [key in TCommunityVerificationApps]: string;
+  } = {
+    Wallet: state.Wallet?.ens || state.Wallet?.address || "connected",
+    WorldID: "verified",
+    X: "connected",
+  };
+
+  const onConnectClick = (id: TCommunityVerificationApps) => () => {
+    const action = communityActions[id];
+
+    try {
+      const output = action();
+
+      addApplication(id, output);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -182,18 +260,31 @@ function CreateCommunity() {
                     selectArr[i] ? "text-red-600" : "text-attention",
                   )}
                 >
-                  <button
-                    className="hover:opacity-80"
-                    onClick={() =>
-                      setSelectArr((arr) => {
-                        const newArr = [...arr];
-                        newArr[i] = !newArr[i];
-                        return newArr;
-                      })
-                    }
-                  >
-                    {selectArr[i] ? "remove" : "add"}
-                  </button>
+                  {id === "WorldID" ? (
+                    <IDKitWidget
+                      app_id={import.meta.env.VITE_WORLD_APP_ID}
+                      action="login"
+                      handleVerify={verifyProof}
+                      credential_types={[CredentialType.Orb]}
+                      onSuccess={() => {}}
+                      autoClose
+                    >
+                      {({ open }) => (
+                        <button onClick={open} className="hover:opacity-80">
+                          {state[id] ? "verified" : "connect"}
+                        </button>
+                      )}
+                    </IDKitWidget>
+                  ) : state[id] ? (
+                    communityState[id]
+                  ) : (
+                    <button
+                      onClick={onConnectClick(id)}
+                      className="hover:opacity-80"
+                    >
+                      connect
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -203,7 +294,7 @@ function CreateCommunity() {
         <Button
           type="submit"
           className="mt-4"
-          disabled={isLoading || isCreating}
+          disabled={isLoading || isCreating || !state["WorldID"]}
         >
           {isLoading
             ? "Sign transaction"

@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { useCommunityNewMembershipEvent } from "../generated";
 import { GET_COMMUNITY_USERS } from "../graphql";
 
 function useFetchCommunityUsers(contractAddress: `0x${string}`) {
