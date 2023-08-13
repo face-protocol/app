@@ -30,7 +30,6 @@ function CreateCommunity() {
 
   const [isCreating, setIsCreating] = useState(false);
   const [selectArr, setSelectArr] = useState<boolean[]>([]);
-  const { chain } = useNetwork();
 
   const { address } = useAccount();
   const { writeAsync, isLoading } = useCommunityFactoryCreateCommunity({
