@@ -7,6 +7,7 @@ import {
   useCommunityReputationOf,
   useCommunityRulesUri,
 } from "../../generated";
+import { useFetchCommunityRules } from "../../hooks";
 import { USERS_MOCK } from "../../mocks/mocks";
 import { TCommunityRules } from "../../models";
 import { Heading, Profile } from "../../ui";
@@ -29,18 +30,10 @@ const CommunityView = ({ contractAddress }: TCommunityViewProps) => {
     enabled: !!address,
   });
 
-  const [rulesData, setRulesData] = useState<TCommunityRules | null>(null);
-
-  const { isFetched } = useCommunityRulesUri({
-    chainId: DEFAULT_CHAIN_ID,
-    address: contractAddress,
-    onSuccess: async (url) => {
-      const json = await fetch(url);
-      const data = await json.json();
-
-      setRulesData(data);
-    },
-  });
+  const { rulesData, isFetched } = useFetchCommunityRules(
+    DEFAULT_CHAIN_ID,
+    contractAddress,
+  );
 
   const userReputation =
     typeof reputationOf === "bigint" && formatEther(reputationOf || 0n);

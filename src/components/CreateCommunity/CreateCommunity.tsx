@@ -49,6 +49,7 @@ function CreateCommunity() {
     const avatarSrc = target.communityLogo.value;
     const rules: TCommunityRules = {
       communityAvatarURL: avatarSrc,
+      countOfApprovals: target.membersToAccept.value,
     };
 
     const pathNameHash = btoa(

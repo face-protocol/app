@@ -4,7 +4,10 @@ import { ActionButton } from "../../ui/ActionButton";
 import { TFlowProps } from "./types";
 
 import linkedInSrc from "../assets/linkedin.png";
-import { useAccountCommunityApplication } from "../../hooks";
+import {
+  useAccountCommunityApplication,
+  useFetchCommunityRules,
+} from "../../hooks";
 import { useAccount } from "wagmi";
 import { useCommunityMembershipDeposit } from "../../generated";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
@@ -17,15 +20,26 @@ function RequestToJoin({ contractAddress }: TFlowProps) {
     address: contractAddress,
   });
   const { data } = useAccountCommunityApplication(contractAddress);
+  const { rulesData } = useFetchCommunityRules(
+    DEFAULT_CHAIN_ID,
+    contractAddress,
+  );
 
   const votesFor = data && Number(data[2]);
-  const needReputation = formatEther(membershipDeposit * 3n);
+  const needReputation = formatEther(
+    membershipDeposit * BigInt(rulesData?.countOfApprovals || 3),
+  );
+
+  if (!rulesData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <Heading.H1>
         Done! To be accepted, please ask your friend to approve your request.
       </Heading.H1>
+      <img src={rulesData.communityAvatarURL} className="mt-3 w-full" />
       <div>
         You require approval from friends who collectively have a reputation of{" "}
         {needReputation} ETH

@@ -37,7 +37,7 @@ export function App() {
       <header className="flex h-[56px] w-full items-center justify-center p-2">
         {isConnected && <ConnectButton chainStatus="icon" />}
       </header>
-      <main className="m-auto mt-3 h-full w-full max-w-[480px] p-4 md:mt-[50px] md:pt-0">
+      <main className="m-auto mt-3 h-full w-full max-w-[480px] p-4 pb-10 md:mt-[50px] md:pt-0">
         {!isConnecting && (
           <>
             {isConnected ? (
