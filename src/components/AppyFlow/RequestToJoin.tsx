@@ -12,6 +12,8 @@ import { useAccount } from "wagmi";
 import { useCommunityMembershipDeposit } from "../../generated";
 import { CONTRACTS, DEFAULT_CHAIN_ID } from "../../config";
 import { formatEther, parseEther } from "viem";
+import { useQuery } from "@apollo/client";
+import { GET_COMMUNITY_USERS } from "../../graphql";
 
 function RequestToJoin({ contractAddress }: TFlowProps) {
   const profiles = USERS_MOCK;
@@ -29,6 +31,14 @@ function RequestToJoin({ contractAddress }: TFlowProps) {
   const needReputation = formatEther(
     membershipDeposit * BigInt(rulesData?.countOfApprovals || 3),
   );
+
+  const { data: queryData } = useQuery(GET_COMMUNITY_USERS, {
+    variables: {
+      communityId: contractAddress,
+    },
+  });
+
+  console.log("queryData", queryData);
 
   if (!rulesData) {
     return <div>Loading...</div>;

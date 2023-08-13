@@ -8,6 +8,8 @@ import { App } from "./App";
 import { chains, config } from "./wagmi";
 
 import "./index.css";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "./graphql";
 
 /**
  * Root providers and initialization of app
@@ -17,10 +19,12 @@ import "./index.css";
  */
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <WagmiConfig config={config}>
-      <RainbowKitProvider chains={chains}>
-        <App />
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <ApolloProvider client={client}>
+      <WagmiConfig config={config}>
+        <RainbowKitProvider chains={chains}>
+          <App />
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </ApolloProvider>
   </React.StrictMode>,
 );
