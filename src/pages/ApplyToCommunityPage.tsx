@@ -32,8 +32,6 @@ function ApplyToCommunityPage() {
   const isAlreadyApplied = !!application && !!application[0];
   const isAlreadyMember = !!balanceOfAddress;
 
-  console.log("balanceOfAddress", balanceOfAddress);
-
   if (!isBalanceFetched) {
     return <div>Loading...</div>;
   }

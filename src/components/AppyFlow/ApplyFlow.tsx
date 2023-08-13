@@ -15,6 +15,7 @@ import {
 // import { HELIA_JSON, HELIA } from "../../ipfs";
 import { CONTRACTS, DEFAULT_CHAIN_ID, optimismGoerli } from "../../config";
 import { useAccount, useConnect, useWaitForTransaction } from "wagmi";
+import { TIpfsFile, uploadToIpfs, web3Storage } from "../../ipfs";
 
 function Steps({
   currentStep,
@@ -105,13 +106,22 @@ function ApplyFlow({
   const onClickContinue = async () => {
     switch (currentStep) {
       case STEPS.Deposit: {
-        // const hashInfo = await HELIA_JSON.add({
-        //   test: "15.10",
-        // });
-        const hash = "23232323232";
+        const filesPath = `${contractAddress}/${address}.json`;
+        const data: TIpfsFile[] = [
+          {
+            path: filesPath,
+            content: {
+              avatarUrl: "some url",
+              name: "some name",
+              description: "some description",
+            },
+          },
+        ];
+        const response = await uploadToIpfs(data);
+        const { path } = response.result[0];
 
         await write({
-          args: [hash],
+          args: [path],
         });
 
         break;

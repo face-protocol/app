@@ -5,6 +5,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { ConnectWalletPages } from "./pages/ConnectWalletPages";
 import { CreateCommunityPage } from "./pages/CreateCommunityPage";
+import { useEffect } from "react";
+import Moralis from "moralis";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,13 @@ const router = createBrowserRouter([
 
 export function App() {
   const { isConnected, isConnecting } = useAccount();
+
+  useEffect(() => {
+    Moralis.start({
+      apiKey: import.meta.env.VITE_STORAGE_API_KEY,
+    });
+  }, []);
+
   return (
     <>
       <header className="flex h-[56px] w-full items-center justify-center p-2">

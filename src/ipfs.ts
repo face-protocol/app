@@ -12,3 +12,19 @@
 // const { HELIA, HELIA_JSON } = await initializeHelia();
 
 // export { HELIA, HELIA_JSON };
+
+import Moralis from "moralis";
+
+type TIpfsFile = {
+  path: string;
+  content: any;
+};
+
+const uploadToIpfs = async (files: TIpfsFile[]) => {
+  return Moralis.EvmApi.ipfs.uploadFolder({
+    abi: files,
+  });
+};
+
+export type { TIpfsFile };
+export { uploadToIpfs };
